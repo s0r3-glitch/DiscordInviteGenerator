@@ -7,7 +7,6 @@ from colorama import Fore, init
 import random
 import string
 from discord_webhook import DiscordWebhook
-import urllib3
 init()
 
 available = 0
@@ -59,7 +58,7 @@ def checkInvite():
 	randomCode = ''.join(random.choice(lowerLetters + upperLetters + digits) for i in range(8))
 	invite = randomCode
 	try:
-		discordRequest = requests.get(f"https://discord.com/api/v9/invites/{invite}", proxies={"http": "http://" + randProxy,"https": "https://" + randProxySSL})
+		discordRequest = requests.get(f"https://discord.com/api/v9/invites/{invite}", proxies={"http": randProxy,"https": randProxySSL})
 	except Exception as e:
 		#print(e)
 		return;

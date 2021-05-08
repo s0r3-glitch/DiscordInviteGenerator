@@ -25,6 +25,7 @@ elif webhookk == " ":
 	print("The value you entered was null. Please try again.")
 	os.system("PAUSE")
 	start()
+os.system('cls')
 
 available = 0
 taken = 0 

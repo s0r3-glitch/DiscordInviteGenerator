@@ -7,7 +7,24 @@ from colorama import Fore, init
 import random
 import string
 from discord_webhook import DiscordWebhook
+
+def start():
+	pass
+
 init()
+
+os.system('cls')
+global webhookk
+webhookk = ""
+webhookk = input("Webhook: ")
+if webhookk == "":
+	print("The value you entered was null. Please try again.")
+	os.system("PAUSE")
+	start()
+elif webhookk == " ":
+	print("The value you entered was null. Please try again.")
+	os.system("PAUSE")
+	start()
 
 available = 0
 taken = 0 
@@ -68,7 +85,7 @@ def checkInvite():
 		ctypes.windll.kernel32.SetConsoleTitleW("Discord Invite Generator/Checker | arshan.xyz | Valid: " + str(available) +  " Invalid: " + str(taken) + " Total: " + str(total))
 		print(Fore.GREEN + f"[+] Invite '{invite}' is valid.")
 		prettyJson = json.dumps(discordRequest.text)
-		webhook = DiscordWebhook(url=webhook, content=prettyJson)
+		webhook = DiscordWebhook(url=webhookk, content=prettyJson)
 		try:
 			response = webhook.execute()
 		except Exception:
@@ -92,17 +109,7 @@ def checkInvite():
 		print(Fore.YELLOW + "[!] An unexpected error has occured. Error Code: " + str(discordRequest.status_code))
 
 def menu():
-	global webhook
 	ctypes.windll.kernel32.SetConsoleTitleW("Discord Invite Generator/Checker | arshan.xyz")
-	webhook = input("Webhook: ")
-	if webhook == "":
-		print("The value you entered was null. Please try again.")
-		os.system("PAUSE")
-		menu()
-	elif webhook == " ":
-		print("The value you entered was null. Please try again.")
-		os.system("PAUSE")
-		menu()
 	main()
 
 if __name__ == "__main__":

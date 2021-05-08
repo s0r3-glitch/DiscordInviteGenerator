@@ -17,5 +17,8 @@ pip install -r requirements.txt
 py main.py
 ```
 
+# Upcoming Features
+- Proxyless support
+
 # Support
 Create a issue, or message me on discord.

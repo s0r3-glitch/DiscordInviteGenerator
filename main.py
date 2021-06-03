@@ -7,30 +7,31 @@ from colorama import Fore, init
 import random
 import string
 from discord_webhook import DiscordWebhook
-
-def start():
-	pass
+from core.localscommands import clear, pause, title
 
 init()
-
-os.system('cls')
-global webhookk
-webhookk = ""
-webhookk = input("Webhook: ")
-if webhookk == "":
-	print("The value you entered was null. Please try again.")
-	os.system("PAUSE")
-	start()
-elif webhookk == " ":
-	print("The value you entered was null. Please try again.")
-	os.system("PAUSE")
-	start()
-os.system('cls')
 
 available = 0
 taken = 0 
 total = 0
 errorCodes = [100, 101, 103, 201, 202, 203, 204, 205, 206, 300, 301, 302, 303, 304, 307, 308, 400, 401, 402, 403, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 422, 425, 426, 428, 431, 451, 500, 501, 502, 503, 504, 505, 506, 507, 508, 510, 511]
+
+def start():
+    clear()
+    global webhookk
+    webhookk = ""
+    webhookk = input("Webhook: ")
+    if webhookk == "":
+        print("The value you entered was null. Please try again.")
+        pause()
+        start()
+    elif webhookk == " ":
+        print("The value you entered was null. Please try again.")
+        pause()
+        start()
+    clear()
+
+
 
 def getProxy():
 	global proxList
@@ -38,7 +39,7 @@ def getProxy():
 	prox = requests.get("https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=US&ssl=no&anonymity=all")
 	if prox.text == "You have reached your hourly maximum API requests of 750.":
 		print("Please wait an hour before running this script again.")
-		os.system('PAUSE')
+		pause()
 		exit()
 	proxyTxt = prox.text.splitlines()
 	proxList = []
@@ -47,7 +48,7 @@ def getProxy():
 	prox2 = requests.get("https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=US&ssl=yes&anonymity=all")
 	if prox2.text == "You have reached your hourly maximum API requests of 750.":
 		print("Please wait an hour before running this script again.")
-		os.system('PAUSE')
+		pause()
 		exit()
 	proxyTxt2 = prox2.text.splitlines()
 	proxList2 = []
@@ -79,13 +80,14 @@ def checkInvite():
 		discordRequest = requests.get(f"https://discord.com/api/v9/invites/{invite}", proxies={"http": randProxy,"https": randProxySSL})
 	except Exception as e:
 		#print(e)
-		return;
+		return
 	if discordRequest.status_code == 200:
 		available += 1
 		total += 1
-		ctypes.windll.kernel32.SetConsoleTitleW("Discord Invite Generator/Checker | arshan.xyz | Valid: " + str(available) +  " Invalid: " + str(taken) + " Total: " + str(total))
+		title("Discord Invite Generator/Checker | arshan.xyz | Valid: " + str(available) +  " Invalid: " + str(taken) + " Total: " + str(total))
 		print(Fore.GREEN + f"[+] Invite '{invite}' is valid.")
-		prettyJson = json.dumps(discordRequest.text)
+		prettyObject = json.loads(discordRequest.text)
+		prettyJson = json.dumps(prettyObject, indent=2)
 		webhook = DiscordWebhook(url=webhookk, content=prettyJson)
 		try:
 			response = webhook.execute()
@@ -96,23 +98,24 @@ def checkInvite():
 	elif discordRequest.status_code == 404:
 		taken += 1
 		total += 1
-		ctypes.windll.kernel32.SetConsoleTitleW("Discord Invite Generator/Checker | arshan.xyz | Valid: " + str(available) +  " Invalid: " + str(taken) + " Total: " + str(total))
+		title("Discord Invite Generator/Checker | arshan.xyz | Valid: " + str(available) +  " Invalid: " + str(taken) + " Total: " + str(total))
 		print(Fore.RED + f"[-] Invite '{invite}' is invalid.")
 	elif discordRequest.status_code == 429:
 		total += 1
-		ctypes.windll.kernel32.SetConsoleTitleW("Discord Invite Generator/Checker | arshan.xyz | Valid: " + str(available) +  " Invalid: " + str(taken) + " Total: " + str(total))
+		title("Discord Invite Generator/Checker | arshan.xyz | Valid: " + str(available) +  " Invalid: " + str(taken) + " Total: " + str(total))
 		print(Fore.YELLOW + "[!] You are being ratelimited, changing proxies.")
 		#print(randProxy)
 		checkInvite()
 	elif discordRequest.status_code in errorCodes:
 		total += 1
-		ctypes.windll.kernel32.SetConsoleTitleW("Discord Invite Generator/Checker | arshan.xyz | Valid: " + str(available) +  " Invalid: " + str(taken) + " Total: " + str(total))
+		title("Discord Invite Generator/Checker | arshan.xyz | Valid: " + str(available) +  " Invalid: " + str(taken) + " Total: " + str(total))
 		print(Fore.YELLOW + "[!] An unexpected error has occured. Error Code: " + str(discordRequest.status_code))
 
 def menu():
-	ctypes.windll.kernel32.SetConsoleTitleW("Discord Invite Generator/Checker | arshan.xyz")
+	title("Discord Invite Generator/Checker | arshan.xyz")
 	main()
 
 if __name__ == "__main__":
-	menu()
+    start()
+    menu()
 	

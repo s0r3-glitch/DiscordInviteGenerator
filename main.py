@@ -8,6 +8,7 @@ import random
 import string
 from discord_webhook import DiscordWebhook
 from core.localscommands import clear, pause, title
+import json
 
 init()
 
